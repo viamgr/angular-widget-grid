@@ -629,6 +629,7 @@
         };
 
         var directions = resizableCtrl.getResizeDirections();
+
         for (var i = 0; i < directions.length; i++) {
           var dragger = draggers[angular.uppercase(directions[i])];
           if (angular.isDefined(dragger)) {
@@ -681,7 +682,6 @@
               bottom: event.offsetY - dragger.element[0].offsetHeight + ADD_OFFSET,
               right: event.offsetX - dragger.element[0].offsetWidth + ADD_OFFSET
             };
-
             var gridPositions = gridCtrl.getPositions();
 
             $document.on(eventMove, onMove);
@@ -699,9 +699,10 @@
                 event.clientY = event.touches[0].clientY;
               }
 
+
               // normalize the drag position
-              var dragPositionX = Math.round(event.clientX) - gridPositions.left,
-                dragPositionY = Math.round(event.clientY) - gridPositions.top;
+              var dragPositionX = Math.round(event.clientX)/gridCtrl.grid.globalOptions.zoom - gridPositions.left,
+                dragPositionY = Math.round(event.clientY)/gridCtrl.grid.globalOptions.zoom - gridPositions.top;
 
               if (dragger.up) {
                 delta.top = Math.min(Math.max(dragPositionY - draggerOffset.top, 0), gridPositions.height - 1) - startRender.top;
@@ -720,12 +721,13 @@
               }
 
               var currentFinalPos = determineFinalPos();
+
               gridCtrl.highlightArea(currentFinalPos);
 
               containerElement.css({
                 top: delta.top + 'px',
                 left: delta.left + 'px',
-                bottom: delta.bottom + 'px',
+                bottom:delta.bottom + 'px',
                 right: delta.right + 'px'
               });
             }
